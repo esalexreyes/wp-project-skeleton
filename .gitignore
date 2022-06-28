@@ -1,14 +1,17 @@
-# Ignore wp-config and .htaccess
-wp-config.php
-.htaccess
+# Log files
+*.log
 
-# Ignore the wp-content directory
-
+# Ignore Wordpress
 node-modules
 /wp-admin/
 /wp-includes/
 /wp-content/*
 /wp-*.php
+/index.php
+/license.txt
+/readme.html
+/xmlrpc.php
+/.htaccess
 .env
 
 # Add any exceptions below.
