@@ -3,15 +3,19 @@ wp-config.php
 .htaccess
 
 # Ignore the wp-content directory
-node-modules/
+
+node-modules
+/wp-admin/
+/wp-includes/
 /wp-content/*
+/wp-*.php
 .env
 
 # Add any exceptions below.
 !/wp-content/plugins
 /wp-content/plugins/*
-!/wp-content/plugins/citestplugin
+!/wp-content/plugins/rathalos-demo-plugin
 
 !/wp-content/themes
 /wp-content/themes/*
-!/wp-content/themes/citesttheme
+!/wp-content/themes/rathalos-demo-theme
