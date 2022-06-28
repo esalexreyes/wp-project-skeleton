@@ -1,0 +1,17 @@
+# Ignore wp-config and .htaccess
+wp-config.php
+.htaccess
+
+# Ignore the wp-content directory
+node-modules/
+/wp-content/*
+.env
+
+# Add any exceptions below.
+!/wp-content/plugins
+/wp-content/plugins/*
+!/wp-content/plugins/citestplugin
+
+!/wp-content/themes
+/wp-content/themes/*
+!/wp-content/themes/citesttheme
