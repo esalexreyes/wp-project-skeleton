@@ -2,7 +2,7 @@
 *.log
 
 # Ignore Wordpress
-node-modules
+node_modules
 /wp-admin/
 /wp-includes/
 /wp-content/*
