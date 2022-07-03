@@ -15,7 +15,7 @@ node_modules
 /.htaccess
 .env
 
-# Add any exceptions below.
+# Add any exceptions below, change the rathalos-demo-plugin and rathalos-demo-theme to what you need.
 !/wp-content/plugins
 /wp-content/plugins/*
 !/wp-content/plugins/rathalos-demo-plugin
