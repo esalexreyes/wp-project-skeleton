@@ -12,9 +12,9 @@
     "url": "https://github.com/esalexreyes/wp-rathalos/issues"
   },
   "scripts": {
-    "build": "webpack --progress --config config/webpack.config.js",
-    "dev": "webpack --progress --config config/webpack.config.js --env NODE_ENV=development",
-    "start": "webpack --progress --config config/webpack.config.js --env NODE_ENV=development --watch"
+    "build": "webpack --config .config/webpack.config.js --env NODE_ENV=production",
+    "dev": "webpack --progress --config .config/webpack.config.js --progress --no-stats --env NODE_ENV=development",
+    "start": "webpack --progress --config .config/webpack.config.js --env NODE_ENV=development --watch"
   },
   "devDependencies": {
     "@swc/core": "^1.2.194",
@@ -22,6 +22,7 @@
     "browser-sync-webpack-plugin": "^2.3.0",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",
+    "css-minimizer-webpack-plugin": "^4.0.0",
     "disable-output-webpack-plugin": "^1.0.1",
     "dotenv": "^16.0.1",
     "eslint": "^8.16.0",
@@ -32,6 +33,7 @@
     "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-hooks": "^4.5.0",
     "eslint-webpack-plugin": "^3.1.1",
+    "glob": "^8.0.3",
     "mini-css-extract-plugin": "^2.6.0",
     "sass": "^1.52.1",
     "sass-loader": "^13.0.0",
@@ -41,8 +43,10 @@
     "stylelint-scss": "^4.2.0",
     "stylelint-webpack-plugin": "^3.3.0",
     "swc-loader": "^0.2.1",
+    "terser-webpack-plugin": "^5.3.3",
     "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2",
+    "webpack-fix-style-only-entries": "^0.6.1",
     "webpackbar": "^5.0.2"
   }
 }

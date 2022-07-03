@@ -1,6 +1,6 @@
-const CopyPlugin = require('copy-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const StylelintPlugin = require('stylelint-webpack-plugin');
 const WebpackBar = require('webpackbar');
 
@@ -22,7 +22,8 @@ module.exports = (webpackConfig) => {
 
   // CSS Rules
   const cssRules = {
-    test: webpackConfig.sass.rules.test,
+    test: webpackConfig.css.rules.test,
+    include: webpackConfig.css.path,
     exclude: /(node_modules|bower_components|vendor)/,
     use: [
       {
@@ -58,9 +59,9 @@ module.exports = (webpackConfig) => {
 
   // Image Rules
   const imgRules = {
-    test: webpackConfig.images.rules.test,
-    type: webpackConfig.images.rules.type,
-    generator: webpackConfig.images.rules.generator,
+    test: webpackConfig.img.rules.test,
+    type: webpackConfig.img.rules.type,
+    generator: webpackConfig.img.rules.generator,
   };
 
   // Font Rules
@@ -73,16 +74,17 @@ module.exports = (webpackConfig) => {
   // Plugins
   const plugins = [
     new WebpackBar(),
+    new FixStyleOnlyEntriesPlugin({silent: true}),
     new MiniCssExtractPlugin({
       // Extracts CSS files
-      filename: webpackConfig.sass.filename,
+      filename: webpackConfig.css.filename,
     }),
-    new CopyPlugin(webpackConfig.copy),
     new ESLintPlugin({
-      overrideConfigFile: `config/eslint.config.js`
+      overrideConfigFile: `.config/eslint.config.js`
     }),
     new StylelintPlugin({
-      configFile: `config/stylelint.config.js`,
+      configFile: `.config/stylelint.config.js`,
+      ignorePath: `.config/.stylelintignore`,
       fix: true
     }),
   ];

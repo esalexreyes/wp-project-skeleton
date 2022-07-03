@@ -9,13 +9,14 @@
  */
 
 module.exports = {
-  ignoreFiles: [
-    "./htdocs/**/**/*.css",
-    "./assets/public/css/**/*.css",
-    "./vendor/**/**/*.css",
-    "./node_modules/**/**/*.css",
-    "./tests/**/**/*.css"
-  ],
+  // ignoreFiles: [
+  //   // "**/*.css",
+  //   // "./wp-content/themes/**/**/**/*.css",
+  //   // "./wp-content/plugins/**/**/**/*.css",
+  //   // "./vendor/**/**/*.css",
+  //   // "./node_modules/**/**/*.css",
+  //   // "./tests/**/**/*.css"
+  // ],
   extends: "stylelint-config-standard-scss",
   plugins: [
     "stylelint-scss",

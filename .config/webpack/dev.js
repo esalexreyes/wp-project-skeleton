@@ -56,12 +56,14 @@ module.exports = (webpackConfig) => {
     ],
   ];
 
+  console.log("Running in DEV Mode");
+
   // Configuration that webpack will use!
   return {
     mode: 'development',
-    entry: webpackConfig.js.entry,
+    entry: webpackConfig.entry,
     output: {
-      path: webpackConfig.dev.output,
+      path: webpackConfig.output,
       filename: webpackConfig.js.filename,
     },
     devtool: sourceMap.devtool,

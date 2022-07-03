@@ -2,6 +2,7 @@
 *.log
 
 # Ignore Wordpress
+dist
 node_modules
 /wp-admin/
 /wp-includes/

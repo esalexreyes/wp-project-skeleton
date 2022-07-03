@@ -1,85 +1,93 @@
 // Global Requires
+const glob = require('glob');
 const path =  require ('path');
-require('dotenv').config({ path: '/.config/.env' });
+require('dotenv').config({ path: '.config/.env' });
 
 // Local requires
 const dev = require('./webpack/dev');
+const prod = require('./webpack/prod');
 const watch = require('./webpack/watch');
 
 // Environment Configuration
 const envConfig = {
-  projectName: process.env.PROJECT_NAME,
-  domainName: process.env.DEV_DOMAIN,
-  distPath: process.env.DIST,
+  pluginName: process.env.PLUGIN_NAME,
+  pluginPath: `../wp-content/plugins/${process.env.PLUGIN_NAME}`,
+  themeName: process.env.THEME_NAME,
+  themePath: `../wp-content/themes/${process.env.THEME_NAME}`,
+  devDomain: process.env.DEV_DOMAIN_NAME,
+  devSslKey: process.env.DEV_SSL_KEY,
+  devSslCert: process.env.DEV_SSL_CERT,
 };
 
-const pluginConfig = {
-  output,
-  js,
-  css,
-  img,
-  fonts,
-  copy,
-  sourceMaps,
-};
+function getEntries(pattern, dir, ) {
+  const entries = {};
+  glob.sync(pattern, {cwd: dir}).forEach((file) => {
+    let outputFileKey = path.basename(file, path.extname(file));
+    outputFileKey = `${(path.extname(file) == '.scss') ? 'css' : 'js' }/${outputFileKey}`;
+    entries[outputFileKey] = path.join(dir, file);
+  });
+  console.log(entries);
+  return entries;
+}
 
-const themeConfig = {
-  output,
-  js,
-  css,
-  img,
-  fonts,
-  copy,
-  sourceMaps,
-};
+// const themeConfig = {
+//   output,
+//   js,
+//   css,
+//   img,
+//   fonts,
+//   copy,
+//   sourceMaps,
+// };
 
 const browsersync = {
   host: 'localhost',
-  port: 3600,
+  port: 3600, // Choose a port
   mode: 'proxy', // proxy | server
-  proxy: envConfig.domainName,
+  proxy: envConfig.devDomain,
   files: [
-    'src/**/**/*.php',
-    'src/**/**/*.js',
-    'src/**/**/*.scss',
-    'src/**/**/*.json',
+    `${envConfig.themePath}/**/**/*.php`,
+    `${envConfig.themePath}/**/**/*.js`,
+    `${envConfig.themePath}/**/**/*.scss`,
+    `${envConfig.themePath}/**/**/*.json`,
+    `${envConfig.pluginPath}/**/**/*.php`,
+    `${envConfig.pluginPath}/**/**/*.js`,
+    `${envConfig.pluginPath}/**/**/*.scss`,
+    `${envConfig.pluginPath}/**/**/*.json`,
   ],
   // Set false to prevent BrowserSync from reloading and let Webpack Dev Server take care of this
   reload: true,
   // ! Add your own key and cert, be sure to expose them if using devbox
   https: {
-    key: '/home/esalexreyes/DevBox/ca/certs/main/localhost.key',
-    cert: '/home/esalexreyes/DevBox/ca/certs/main/localhost.crt',
+    key: envConfig.devSslKey,
+    cert: envConfig.devSslCert,
   },
 };
 
-const
-
-const oldProjectConfig = {
-  dev: {
-    output: path.resolve(
-      __dirname,
-      `../wp-content/plugins/${envConfig.projectName}/assets`
-    )
+const pluginConfig = {
+  output: path.resolve(
+    __dirname,
+    `${envConfig.pluginPath}/assets/dist`
+  ),
+  entry: {
+    ...getEntries('js/*.js', path.resolve(__dirname, `${envConfig.pluginPath}/assets/src/`)),
+    ...getEntries('css/*.scss', path.resolve(__dirname, `${envConfig.pluginPath}/assets/src/`))
   },
   js: {
-    filename: 'js/[name].js',
-    path: path.resolve(__dirname, '../src/assets/js/'),
-    entry: {
-      frontend: path.resolve(__dirname, '../src/assets/js/frontend.js'),
-      backend: path.resolve(__dirname, '../src/assets/js/backend.js'),
-    },
+    filename: '[name].js',
+    path: path.resolve(__dirname, `${envConfig.pluginPath}/assets/src/js/`),
     rules: {
       test: /\.m?js$/,
     },
   },
-  sass: {
-    filename: 'css/[name].css',
+  css: {
+    filename: '[name].css',
+    path: path.resolve(__dirname, `${envConfig.pluginPath}/assets/src/css/`),
     rules: {
       test: /\.s[ac]ss$/i,
     },
   },
-  images: {
+  img: {
     rules: {
       test: /\.(jpe?g|png|gif|svg|webp)$/i,
       type: 'asset/resource',
@@ -123,71 +131,107 @@ const oldProjectConfig = {
       },
     },
   },
-  copy: {
-    patterns: [
-      {
-        from: '**/*.php',
-        context: path.resolve(__dirname, '../src/'),
-        to({ context, absoluteFilename }) {
-          return `../${path.relative(context, absoluteFilename)}`;
-        },
+  sourceMaps: {
+    enable: true,
+    env: 'dev',
+    devtool: 'source-map',
+  },
+};
+
+const themeConfig = {
+  output: path.resolve(
+    __dirname,
+    `${envConfig.themePath}/assets/dist`
+  ),
+  entry: {
+    ...getEntries('js/*.js', path.resolve(__dirname, `${envConfig.themePath}/assets/src/`)),
+    ...getEntries('css/*.scss', path.resolve(__dirname, `${envConfig.themePath}/assets/src/`))
+  },
+  js: {
+    filename: '[name].js',
+    path: path.resolve(__dirname, `${envConfig.themePath}/assets/src/js/`),
+    rules: {
+      test: /\.m?js$/,
+    },
+  },
+  css: {
+    filename: '[name].css',
+    path: path.resolve(__dirname, `${envConfig.themePath}/assets/src/css/`),
+    rules: {
+      test: /\.s[ac]ss$/i,
+    },
+  },
+  img: {
+    rules: {
+      test: /\.(jpe?g|png|gif|svg|webp)$/i,
+      type: 'asset/resource',
+      generator: {
+        publicPath: '../',
+        filename: 'img/[name][ext]',
       },
-      {
-        from: '**/*.json',
-        context: path.resolve(__dirname, '../src/'),
-        to({ context, absoluteFilename }) {
-          return `../${path.relative(context, absoluteFilename)}`;
-        },
-        noErrorOnMissing: true,
+    },
+    minimizer: {
+      options: {
+        plugins: [
+          ['gifsicle', { interlaced: true }],
+          ['jpegtran', { progressive: true }],
+          ['optipng', { optimizationLevel: 5 }],
+          [
+            'svgo',
+            {
+              plugins: [
+                {
+                  name: 'preset-default',
+                  params: {
+                    overrides: {
+                      removeViewBox: false,
+                    },
+                  },
+                },
+              ],
+            },
+          ],
+        ],
       },
-      {
-        from: '**/*.css',
-        context: path.resolve(__dirname, '../src/'),
-        to({ context, absoluteFilename }) {
-          return `../${path.relative(context, absoluteFilename)}`;
-        },
-        noErrorOnMissing: true,
+    },
+  },
+  fonts: {
+    rules: {
+      test: /\.(eot|ttf|woff|woff2)$/i,
+      type: 'asset/resource',
+      generator: {
+        publicPath: '../',
+        filename: 'fonts/[name][ext]',
       },
-      {
-        from: '**/vendor/**/*.js',
-        context: path.resolve(__dirname, '../src/'),
-        to({ context, absoluteFilename }) {
-          return `../${path.relative(context, absoluteFilename)}`;
-        },
-        noErrorOnMissing: true,
-      },
-    ],
+    },
   },
   sourceMaps: {
     enable: true,
     env: 'dev',
     devtool: 'source-map',
   },
-}
-
-const browsersync = {
-  host: 'localhost',
-  port: 3600,
-  mode: 'proxy', // proxy | server
-  proxy: envConfig.domainName,
-  files: [
-    'src/**/**/*.php',
-    'src/**/**/*.js',
-    'src/**/**/*.scss',
-    'src/**/**/*.json',
-  ],
-  // Set false to prevent BrowserSync from reloading and let Webpack Dev Server take care of this
-  reload: true,
-  // ! Add your own key and cert, be sure to expose them if using devbox
-  https: {
-    key: '/home/esalexreyes/DevBox/ca/certs/main/localhost.key',
-    cert: '/home/esalexreyes/DevBox/ca/certs/main/localhost.crt',
-  },
 };
 
-console.log(projectConfig);
-
 module.exports = (env) => {
-  return [dev(projectConfig)]
+  let config = [];
 
+
+  console.log(env.NODE_ENV);
+  if (env.NODE_ENV == "production"){
+    if (envConfig.pluginName) {
+      config.push(prod(pluginConfig))
+    }
+    if (envConfig.themeName) {
+      config.push(prod(themeConfig))
+    }
+  } else {
+    if (envConfig.pluginName) {
+      config.push(dev(pluginConfig))
+    }
+    if (envConfig.themeName) {
+      config.push(dev(themeConfig))
+    }
+    config.push(watch(browsersync))
+  }
+  return config;
 }

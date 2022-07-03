@@ -29,7 +29,7 @@ module.exports = (webpackConfig) => {
 
   return {
     mode: 'none',
-    entry: './index.js',
+    entry: './.config/index.js',
     output: {
       path: path.resolve(__dirname),
     },
